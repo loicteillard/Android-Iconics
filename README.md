@@ -1,4 +1,4 @@
-forked with All section for the sample (enable search for an icon among all fonts providers)
+> forked with All section for the sample (enable search for an icon among all fonts providers)
 
 # Android-Iconics  [ ![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Aiconics-core/images/download.svg) ](https://bintray.com/mikepenz/maven/com.mikepenz%3Aiconics-core/_latestVersion)
 
