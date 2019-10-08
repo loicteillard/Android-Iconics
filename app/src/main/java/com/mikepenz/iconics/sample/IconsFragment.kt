@@ -38,19 +38,9 @@ import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.IconicsSize
 import com.mikepenz.iconics.sample.item.IconItem
-import com.mikepenz.iconics.utils.IconicsUtils
-import com.mikepenz.iconics.utils.backgroundColorRes
-import com.mikepenz.iconics.utils.backgroundColorString
-import com.mikepenz.iconics.utils.colorRes
-import com.mikepenz.iconics.utils.contourColorRes
-import com.mikepenz.iconics.utils.contourWidthDp
-import com.mikepenz.iconics.utils.enableShadowSupport
-import com.mikepenz.iconics.utils.paddingDp
-import com.mikepenz.iconics.utils.roundedCornersDp
-import com.mikepenz.iconics.utils.sizeDp
-import kotlinx.android.synthetic.main.icons_fragment.list
-import java.util.ArrayList
-import java.util.Random
+import com.mikepenz.iconics.utils.*
+import kotlinx.android.synthetic.main.icons_fragment.*
+import java.util.*
 import kotlin.math.abs
 
 /**
@@ -76,9 +66,9 @@ class IconsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.icons_fragment, null)
     }
@@ -115,7 +105,19 @@ class IconsFragment : Fragment() {
                             adapter.set(icons)
                         }
             }
+        } ?: run {
+            icons.clear()
+            Iconics.getRegisteredFonts(context)
+                    ?.let { listITypeface ->
+                        for (iTypeface in listITypeface) {
+                            val iconItems = iTypeface.icons.asSequence().map(::IconItem)
+                            icons.addAll(iconItems)
+                        }
+                        adapter.set(icons)
+                    }
         }
+
+
         //filter if a search param was provided
         onSearch(search)
     }
@@ -153,10 +155,10 @@ class IconsFragment : Fragment() {
                     //copy to clipboard
                     (ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).run {
                         setPrimaryClip(
-                            ClipData.newPlainText(
-                                "Android-Iconics icon",
-                                icon.icon?.formattedName
-                            )
+                                ClipData.newPlainText(
+                                        "Android-Iconics icon",
+                                        icon.icon?.formattedName
+                                )
                         )
                     }
                 }
@@ -167,9 +169,9 @@ class IconsFragment : Fragment() {
         adapter.onBindViewHolderListener = object : OnBindViewHolderListener {
 
             override fun onBindViewHolder(
-                viewHolder: RecyclerView.ViewHolder,
-                position: Int,
-                payloads: MutableList<Any>
+                    viewHolder: RecyclerView.ViewHolder,
+                    position: Int,
+                    payloads: MutableList<Any>
             ) {
                 val holder = viewHolder as IconItem.ViewHolder
 
@@ -202,10 +204,10 @@ class IconsFragment : Fragment() {
                         holder.image.enableShadowSupport()
                         //holder.image.getIcon().shadowDp(1, 1, 1, Color.argb(200, 0, 0, 0));
                         holder.image.icon?.shadow(
-                            radius = IconicsSize.dp(1),
-                            dx = IconicsSize.dp(1),
-                            dy = IconicsSize.dp(1),
-                            color = IconicsColor.colorInt(Color.argb(200, 0, 0, 0))
+                                radius = IconicsSize.dp(1),
+                                dx = IconicsSize.dp(1),
+                                dy = IconicsSize.dp(1),
+                                color = IconicsColor.colorInt(Color.argb(200, 0, 0, 0))
                         )
                     }
                 }
@@ -218,27 +220,27 @@ class IconsFragment : Fragment() {
                 //remove set tag's
                 viewHolder.itemView.setTag(com.mikepenz.fastadapter.R.id.fastadapter_item, null)
                 viewHolder.itemView.setTag(
-                    com.mikepenz.fastadapter.R.id.fastadapter_item_adapter,
-                    null
+                        com.mikepenz.fastadapter.R.id.fastadapter_item_adapter,
+                        null
                 )
             }
 
             override fun onFailedToRecycleView(
-                viewHolder: RecyclerView.ViewHolder,
-                position: Int
+                    viewHolder: RecyclerView.ViewHolder,
+                    position: Int
             ): Boolean {
                 return false
             }
 
             override fun onViewAttachedToWindow(
-                viewHolder: RecyclerView.ViewHolder,
-                position: Int
+                    viewHolder: RecyclerView.ViewHolder,
+                    position: Int
             ) {
             }
 
             override fun onViewDetachedFromWindow(
-                viewHolder: RecyclerView.ViewHolder,
-                position: Int
+                    viewHolder: RecyclerView.ViewHolder,
+                    position: Int
             ) {
             }
         }
@@ -287,6 +289,10 @@ class IconsFragment : Fragment() {
             return IconsFragment().apply {
                 arguments = bundleOf(FONT_NAME to fontName)
             }
+        }
+
+        fun newInstance(): IconsFragment {
+            return IconsFragment()
         }
     }
 }

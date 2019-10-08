@@ -67,6 +67,16 @@ class MainActivity : AppCompatActivity() {
 
         //add all icons of all registered Fonts to the list
         val items = ArrayList<IDrawerItem<*>>(fonts.size)
+
+        // add All entry
+        val pdi = PrimaryDrawerItem()
+                .withName("All")
+                .withBadge("a lot")
+                .withDescription("All icons")
+                .withBadgeStyle(BadgeStyle().withColorRes(R.color.md_grey_200))
+                .withIdentifier(999L)
+        items.add(pdi)
+
         fonts.forEachIndexed { index, font ->
             val pdi = PrimaryDrawerItem()
                     .withName(font.fontName)
@@ -91,11 +101,15 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         drawerItem: IDrawerItem<*>
                     ): Boolean {
-                        fonts[position].fontName.also {
-                            loadIcons(it)
-                            supportActionBar?.title = it
+                        if (position == 0) {
+                            loadAllIcons()
+                            supportActionBar?.title = "All"
+                        }else {
+                            fonts[position-1].fontName.also {
+                                loadIcons(it)
+                                supportActionBar?.title = it
+                            }
                         }
-
                         return false
                     }
                 })
@@ -212,6 +226,19 @@ class MainActivity : AppCompatActivity() {
     private fun loadIcons(fontName: String) {
         supportFragmentManager.beginTransaction().also {
             val iconsFragment = IconsFragment.newInstance(fontName).apply {
+                randomize(isRandomize)
+                shadow(isShadowEnabled)
+                onSearch(currentSearch)
+            }
+            it.replace(R.id.content, iconsFragment)
+            it.commit()
+            this.iconsFragment = iconsFragment
+        }
+    }
+
+    private fun loadAllIcons() {
+        supportFragmentManager.beginTransaction().also {
+            val iconsFragment = IconsFragment.newInstance().apply {
                 randomize(isRandomize)
                 shadow(isShadowEnabled)
                 onSearch(currentSearch)
