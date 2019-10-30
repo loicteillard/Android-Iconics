@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
     private var identifierGmd = 0
     private var currentSearch: String? = null
 
+    companion object {
+        private const val ALL =  999L
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -74,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 .withBadge("a lot")
                 .withDescription("All icons")
                 .withBadgeStyle(BadgeStyle().withColorRes(R.color.md_grey_200))
-                .withIdentifier(999L)
+                .withIdentifier(ALL)
         items.add(pdi)
 
         fonts.forEachIndexed { index, font ->
@@ -123,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
                 })
                 .withFireOnInitialOnClick(true)
-                .withSelectedItem(identifierGmd.toLong())
+                .withSelectedItem(ALL)
                 .build()
     }
 
