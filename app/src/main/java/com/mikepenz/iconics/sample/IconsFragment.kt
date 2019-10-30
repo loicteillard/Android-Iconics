@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -140,16 +141,6 @@ class IconsFragment : Fragment() {
 
                     ImageView(ctx).let { imageView ->
                         imageView.setImageDrawable(icon)
-
-                        if (!::popup.isInitialized) {
-                            val size = IconicsUtils.convertDpToPx(ctx, 144)
-
-                            PopupWindow(size, size).let { popup ->
-                                this@IconsFragment.popup = popup
-                            }
-                        }
-                        popup.contentView = imageView
-                        popup.showAsDropDown(v)
                     }
 
                     //copy to clipboard
@@ -157,10 +148,12 @@ class IconsFragment : Fragment() {
                         setPrimaryClip(
                                 ClipData.newPlainText(
                                         "Android-Iconics icon",
-                                        icon.icon?.formattedName
+//                                        icon.icon?.formattedName
+                                        icon.icon?.name
                                 )
                         )
                     }
+                    Toast.makeText(activity, "saved to clipboard", Toast.LENGTH_SHORT).show()
                 }
             }
             false
